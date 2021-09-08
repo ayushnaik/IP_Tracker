@@ -1,0 +1,146 @@
+<!--
+   
+   Copyright 2020 Eh_Spot <ehspot@parrot>
+   
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+   
+   
+-->
+
+<!DOCTYPE html>
+<html xml:lang="en" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <style media="screen" type="text/css">
+        .constwidth {
+            font-family: courier, system
+        }
+
+        textarea {
+            overflow: auto;
+        }
+    </style>
+
+    <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>AES File Encryption</title>
+
+
+    <!-- load CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" type="text/css" href="slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="slick/slick-theme.css" />
+    <link rel="stylesheet" href="css/style.css">
+
+    <script>document.documentElement.className = "js"; var supportsCssVars = function () { var e, t = document.createElement("style"); return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports && window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e }; supportsCssVars() || alert("Please view this in a modern browser such as latest version of Chrome or Microsoft Edge.");</script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="js/aes-encryption.js"></script>
+</head>
+
+<body>
+    <div>
+        <video id="fullscreen-bg" autoplay loop muted>
+            <source src="video 2.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div id="tm-wrap">
+        <div>
+            <h2 class="tm-page-title">AES File Encryption.</h2>
+        </div>
+        <div>
+            <div class="text-block">
+                <div class="body-text">
+                    <br>
+                    <div>
+                        <h2 style="font-size: 60px; font-weight: 900; text-decoration: underline;">Encrypt a File</h2>
+                    </div>
+                    <br>
+                    <div style="font-weight:bold">
+                        <p>To encrypt a file, enter a password and drop the file to be encrypted into the dropzone
+                            below. The
+                            file will then be encrypted using the password, then you'll be given an opportunity to save
+                            the
+                            encrypted file to your system.
+                        </p>
+                    </div>
+                    <br>
+                    <div class="divTable">
+                        <div class="divTableBody">
+                            <div class="divTableRow">
+                                <div style="display: table-cell; font-size: 30px;">Password :</div>
+                                <div><input style="color: white; display: table-cell; position: relative; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; padding: 4px 4px 4px 3px; background-color: rgba(0, 0, 0, 0.809); bottom: 46px;" id=txtEncpassphrase type=password size=30
+                                        onkeyup=javascript:encvalidate(); value=''>
+                                        <div style=" text-align: center; margin-left: 820px; margin-top: -90px; font-size: 15px;">(minumum length eight characters, make sure it strong!)
+                                        </div>
+                                    </div>
+                            </div>
+                            <p></p>
+                            <br>
+                            <div class="divTableRow">
+                                <div style="display: table-cell; font-size: 30px;">Password (confirm):</div>
+                                <div><input style="color: white; display: table-cell; position: relative; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; padding: 4px 4px 4px 3px; background-color: rgba(0, 0, 0, 0.768); bottom: 46px;" id=txtEncpassphraseretype type=password size=30
+                                        onkeyup=javascript:encvalidate(); value=''></div>
+                                <div style="margin-left: 500px; margin-top: -115px; "><span class=greenspan id=spnCheckretype></span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p> <br><br></p>
+
+                    <div>
+                        <div class=dropzone id="encdropzone" ondrop="drop_handler(event);"
+                            ondragover="dragover_handler(event);" ondragend="dragend_handler(event);">
+                            <div style="font-size: 15px;">
+                                <p>Drag and drop the file or click <a style="color: red;"
+                                        onclick=javascript:encfileElem.click();>here</a> to select file.</p>
+                            </div>
+                            <p><span id=spnencfilename></span></p>
+                        </div>
+                        <input type="file" id="encfileElem" style="display:none" onchange="selectfile(this.files)">
+                    </div>
+
+                    <p> </p>
+                    <br>
+
+                    <div style="margin-bottom: 30px;">
+                        <div>
+                            <button id=btnEncrypt onclick=javascript:encryptfile(); disabled>Encrypt File</button>
+                        </div>
+                        <div class="divTableCell"><span id=spnEncstatus></span></div>
+                    </div>
+
+                    <p> </p>
+
+                    <div style="margin-top: 10px; margin-bottom: 30px;">
+                        <a id=aEncsavefile hidden><button>Save Encrypted File</button></a>
+                    </div>
+
+                    <p> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p>Copyright <span class="tm-current-year">2020</span> <i>Eh_Spot</i> | Design: <i>Terminal</i></p>
+    </div>
+</body>
+
+</html>
